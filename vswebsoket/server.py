@@ -1,7 +1,7 @@
 
 import sys
 import socket
-from client import *
+from connection import *
 
 class CWsServer:
 	def __init__ (self, address, port):
@@ -15,13 +15,9 @@ class CWsServer:
 	def WaitForClient (self):
 		# Wait for a connection
 		print ("Waiting for client...")
-		connection, client_address = self.sock.accept()
-		client = Client (connection)
+		socket, client_address = self.sock.accept()
+		connection = Connection (socket)
 		print ("Client connected.")
-		client.handshake()
+		connection.handshake()
 		print ("Http handshake complete.")
-		return client
-	
-	
-	
-	
+		return connection
