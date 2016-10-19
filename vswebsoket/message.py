@@ -42,7 +42,7 @@ class MessageProcessor:
 				self.frame_count += 1
 				#if self.frame_count > MAX_FRAME_COUNT:
 				#	raise WebSocketError("Too many frames")
-				
+
 	def send_message (self, msg):
 		fm = frame.build_frame(frame.TEXT_FRAME, msg)
 		self.frame_processor.send_frame(fm)

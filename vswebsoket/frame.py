@@ -3,6 +3,9 @@
 # Author: Sergey Zolotykh
 # *****************************************************
 
+# Import
+import random
+
 # Frame operation codes
 CONTINUATION_FRAME = 0x0
 TEXT_FRAME = 0x1
@@ -16,7 +19,7 @@ class Header:
 		byte0 = ord(data[0])
 		self.fin = byte0 >> 7
 		self.opcode = byte0 & 0x0F
-		
+
 		byte1 = ord(data[1])
 		self.maskbit = byte1 >> 7
 		self.length = byte1 & 0x7F
@@ -31,7 +34,7 @@ class Header:
 		byte0 = self.fin << 7
 		byte0 = byte0 | self.opcode
 		byte1 = self.maskbit << 7
-		
+
 		length_bytes = []
 		if self.length < 126:
 			byte1 = byte1 | self.length
@@ -42,19 +45,27 @@ class Header:
 		else:
 			# frame data to large
 			pass
-			
+
 		header_bytes = chr(byte0) + chr(byte1)
+
 		for byte in length_bytes:
 			header_bytes += chr(byte)
+
+		if self.maskbit:
+			for byte in self.mask:
+				header_bytes += chr(byte)
 		return header_bytes
 
 # Build header
-def build_header(opcode, length, fin = 1, maskbit = 0):
+def build_header(opcode, length, fin = 1, maskbit = 1):
 	header = Header()
 	header.opcode = opcode
 	header.length = length
 	header.fin = fin
 	header.maskbit = maskbit
+	if header.maskbit:
+		mask = random.randint(0, 65535)
+		header.mask = [mask>>8*i & 0xFF for i in range(0,4)]
 	return header
 
 class Frame:
@@ -64,9 +75,18 @@ class Frame:
 
 	def encode(self):
 		frame_bytes = self.header.encode()
-		frame_bytes += self.body
+
+		# Masking body of the frame
+		if self.header.maskbit:
+			body = ""
+			for i in range(0, len(self.body)):
+				body += chr(ord(self.body[i]) ^ self.header.mask[i % 4])
+			frame_bytes += body
+		else:
+			frame_bytes += self.body
+
 		return frame_bytes
-	
+
  # Build frame
 def build_frame(opcode, body = "", fin = 1):
 	header = build_header(opcode, len(body), fin)
@@ -93,7 +113,7 @@ class FrameProcessor:
 			len_bytes = 2
 		elif header.length == 127:
 			len_bytes = 8
-		
+
 		if len_bytes != 0:
 			while len(self.data) < nbytes:
 				self.data += self.connection.recv(1024)

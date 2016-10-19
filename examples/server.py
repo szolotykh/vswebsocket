@@ -16,14 +16,15 @@ class KeepAlive(VSThread):
 if __name__ == "__main__":
 	server = CWsServer("localhost", 8080)
 	connection = server.WaitForClient ()
-	keep_alive = KeepAlive(connection)
-	keep_alive.start()
-	try:
-		while True:
-			message = connection.wait_message()
-			print message.data
-			if message.type == CLOSE_MESSAGE:
-				raise Exception()
-	except:
-		keep_alive.stop()
-		connection.close()
+	print "Client connected"
+	#keep_alive = KeepAlive(connection)
+	#keep_alive.start()
+	#try:
+	while True:
+		message = connection.wait_message()
+		print "Receive: " + message.data
+		if message.type == CLOSE_MESSAGE:
+			raise Exception()
+	#except:
+		#keep_alive.stop()
+		#connection.close()
