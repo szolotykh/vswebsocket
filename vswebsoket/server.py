@@ -25,7 +25,7 @@ class CWsServer:
 			return None
 		connection = Connection (socket)
 		# print ("Client connected.")
-		connection.handshake()
+		connection.wait_for_handshake()
 		# print ("Http handshake complete.")
 		return connection
 

@@ -18,6 +18,5 @@ class CWsClient:
 
 		origin = self.scheme + "://" + self.hostname + ":" + str(self.port)
 		connection = Connection (self.sock)
-		connection.send_client_handshake(origin, self.path)
-		connection.receive_server_handshake()
+		connection.make_handshake(origin, self.path)
 		return connection
