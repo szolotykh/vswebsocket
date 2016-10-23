@@ -22,6 +22,6 @@ class WSClient:
 		self.sock.connect((self.hostname, self.port))
 
 		origin = self.scheme + "://" + self.hostname + ":" + str(self.port)
-		connection = Connection (self.sock)
+		connection = Connection (self.sock, "client")
 		connection.make_handshake(origin, self.path)
 		return connection

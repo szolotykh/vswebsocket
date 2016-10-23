@@ -87,8 +87,8 @@ class Frame:
 		return frame_bytes
 
  # Build frame
-def build_frame(opcode, body = "", fin = 1):
-	header = build_header(opcode, len(body), fin)
+def build_frame(opcode, body = "", fin = 1, maskbit = 1):
+	header = build_header(opcode, len(body), fin, maskbit)
 	return Frame(header, body)
 
 
@@ -134,8 +134,12 @@ class FrameProcessor:
 			self.data += self.connection.recv(1024)
 
 		body = ""
-		for i in range(0, header.length):
-			body += chr(ord(self.data[i]) ^ ord(header.mask[i % 4]))
+		if header.maskbit:
+			for i in range(0, header.length):
+				body += chr(ord(self.data[i]) ^ ord(header.mask[i % 4]))
+		else:
+			body = self.data[0:header.length]
+
 		self.data = self.data[header.length:]
 		return body
 

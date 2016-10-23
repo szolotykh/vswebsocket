@@ -25,7 +25,7 @@ class WSServer:
 		if self.stop:
 			socket.close()
 			return None
-		connection = Connection (socket)
+		connection = Connection (socket, "server")
 		connection.wait_for_handshake()
 		return connection
 

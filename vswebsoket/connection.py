@@ -14,10 +14,11 @@ from http import HttpRequest, HttpResponse
 
 
 class Connection:
-	def __init__(self, socket):
+	def __init__(self, socket, application = "server"):
 		self.socket = socket
 		self.data = ""
-		self.message_pocessor = MessageProcessor(self.socket)
+		self.application = application
+		self.message_pocessor = MessageProcessor(self.socket, self.application)
 		self.receive_message = self.message_pocessor.receive_message
 		self.send_message = self.message_pocessor.send_message
 
@@ -52,7 +53,7 @@ class Connection:
 		return request
 
 	def send_handshake_response(self, key):
-		response = HttpResponse()
+		response = HttpResponse(101)
 		response.add_header("Upgrade", "websocket")
 		response.add_header("Connection", "Upgrade")
 		response.add_header("Sec-WebSocket-Accept", self.generate_accept(key))
@@ -73,7 +74,6 @@ class Connection:
 	# Server Side of handshake
 	def wait_for_handshake(self):
 		request = self.receive_handshake_request()
-		print request.headers
 		key = request.headers['Sec-WebSocket-Key']
 		self.send_handshake_response(key)
 		return True

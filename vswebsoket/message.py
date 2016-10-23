@@ -20,7 +20,8 @@ class Message:
 		self.data = data
 
 class MessageProcessor:
-	def __init__(self, connection):
+	def __init__(self, connection, application):
+		self.application = application
 		self.frame_processor = frame.FrameProcessor(connection)
 
 	def receive_message (self):
@@ -48,9 +49,11 @@ class MessageProcessor:
 				#	raise WebSocketError("Too many frames")
 
 	def send_message (self, msg):
-		fm = frame.build_frame(frame.TEXT_FRAME, msg)
+		fm = frame.build_frame(
+			frame.TEXT_FRAME, msg, 1, self.application == "client")
 		self.frame_processor.send_frame(fm)
 
 	def send_close (self):
-		fm = frame.build_frame(frame.CLOSE_FRAME)
+		fm = frame.build_frame(
+			frame.CLOSE_FRAME, "", 1, self.application == "client")
 		self.frame_processor.send_frame(fm)
