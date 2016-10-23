@@ -1,14 +1,19 @@
+# *****************************************************
+# File name: client.py
+# *****************************************************
+
 import socket
 from connection import *
 from urlparse import urlparse
 
-class CWsClient:
-	#def __init__ (self, url):
+class WSClient:
+	def __init__ (self):
+		pass
 
 	def connect(self, url):
 		purl = urlparse(url)
 		self.hostname = purl.hostname
-		self.path = "*" if not purl.path else purl.path
+		self.path = purl.path
 		self.port = 80 if not purl.port else purl.port
 		self.scheme = purl.scheme
 

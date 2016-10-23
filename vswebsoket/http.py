@@ -1,3 +1,6 @@
+# *****************************************************
+# File name: http.py
+# *****************************************************
 
 current_http_version = "HTTP/1.1"
 
@@ -38,7 +41,7 @@ class HttpRequest(HttpObject):
 	def __init__(self, path = ""):
 		super(self.__class__, self).__init__()
 		self.method = "GET"
-		self.path = path
+		self.path = "*" if not path else path
 
 	def encode(self):
 		srequest = "{} {} {}\r\n"\
@@ -64,7 +67,6 @@ class HttpRequest(HttpObject):
 		if not self.decode_headers(lines[1:-2]):
 			return False
 		return True
-
 
 
 class HttpResponse(HttpObject):

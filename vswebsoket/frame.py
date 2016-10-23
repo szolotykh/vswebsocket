@@ -1,6 +1,5 @@
 # *****************************************************
 # File name: frame.py
-# Author: Sergey Zolotykh
 # *****************************************************
 
 # Import
@@ -99,7 +98,7 @@ class FrameProcessor:
 		self.data = ""
 
 	# Wait for message header
-	def Wait_for_header(self):
+	def wait_for_header(self):
 		# Wait for first two bytes of the header
 		while len(self.data) < 2:
 			self.data += self.connection.recv(1024)
@@ -142,7 +141,7 @@ class FrameProcessor:
 
 	# Wait for one frame
 	def wait_for_frame(self):
-		header = self.Wait_for_header()
+		header = self.wait_for_header()
 		body = self.wait_for_body(header)
 		return Frame(header, body)
 

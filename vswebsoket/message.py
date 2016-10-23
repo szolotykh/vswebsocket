@@ -1,3 +1,7 @@
+# *****************************************************
+# File name: message.py
+# *****************************************************
+
 import frame
 from exceptions import WebSocketError
 

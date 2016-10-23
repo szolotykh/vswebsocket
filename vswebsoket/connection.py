@@ -1,3 +1,7 @@
+# *****************************************************
+# File name: connection.py
+# *****************************************************
+
 import hashlib
 import base64
 import random
@@ -14,7 +18,7 @@ class Connection:
 		self.socket = socket
 		self.data = ""
 		self.message_pocessor = MessageProcessor(self.socket)
-		self.wait_message = self.message_pocessor.receive_message
+		self.receive_message = self.message_pocessor.receive_message
 		self.send_message = self.message_pocessor.send_message
 
 	def receive_http(self):
@@ -31,7 +35,7 @@ class Connection:
 		return base64.b64encode(sha.digest())
 
 	# Handshake
-	def send_handshake_request(self, origin, path):
+	def send_handshake_request(self, origin, path = ""):
 		request = HttpRequest(path)
 		request.add_header("Origin", origin)
 		#WebSocket version
@@ -61,7 +65,7 @@ class Connection:
 		return response
 
 	# Client side of handshake
-	def make_handshake(self, origin, path):
+	def make_handshake(self, origin, path = ""):
 		self.send_handshake_request(origin, path)
 		self.receive_handshake_response()
 		return True

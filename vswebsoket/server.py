@@ -1,9 +1,12 @@
+# *****************************************************
+# File name: server.py
+# *****************************************************
 
 import sys
 import socket
 from connection import *
 
-class CWsServer:
+class WSServer:
 	def __init__ (self, address, port):
 		self.address = address
 		self.port = port
@@ -16,20 +19,17 @@ class CWsServer:
 
 		self.stop = False
 
-	def WaitForClient (self):
+	def accept (self):
 		# Wait for a connection
-		# print ("Waiting for client...")
 		socket, client_address = self.sock.accept()
 		if self.stop:
 			socket.close()
 			return None
 		connection = Connection (socket)
-		# print ("Client connected.")
 		connection.wait_for_handshake()
-		# print ("Http handshake complete.")
 		return connection
 
-	def StopWaiting(self):
+	def interrupt_accept(self):
 		self.stop = True
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		sock.connect((self.address, self.port))
