@@ -6,7 +6,7 @@ import sys
 import socket
 from connection import *
 
-class WSServer:
+class WSServer(object):
 	def __init__ (self, address, port):
 		self.address = address
 		self.port = port

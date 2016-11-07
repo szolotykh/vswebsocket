@@ -6,7 +6,7 @@ import socket
 from connection import *
 from urlparse import urlparse
 
-class WSClient:
+class WSClient(object):
 	def __init__ (self):
 		pass
 
